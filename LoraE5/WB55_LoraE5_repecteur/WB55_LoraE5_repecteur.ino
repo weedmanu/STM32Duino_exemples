@@ -157,7 +157,7 @@ void setup() {
   delay(200);                                                                     // un petit délais 
   // on lance la commande de config: 
   // Fréquence, mode, bande passante, puissance RX, puissance TX, CRC (check nb de byte envoyés et reçus), IQ (inversé), réseau public/privé (off/on) 
-  comande_AT_LoraE5("AT+TEST=RFCFG,866,SF12,125,12,12,15,ON,OFF,OFF\r\n");  
+  comande_AT_LoraE5("AT+TEST=RFCFG,866,SF12,125,15,12,15,ON,OFF,OFF\r\n");  
   comande_AT_LoraE5("AT+TEST=RXLRPKT\r\n");                                       // on lance la commande qui met le module en mode réception
   Serial.println("LoraE5 en mode réception");                                     // on écrit dans la com série avec le pc pour infos
 }

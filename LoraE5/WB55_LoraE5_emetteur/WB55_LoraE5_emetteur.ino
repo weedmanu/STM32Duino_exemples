@@ -95,7 +95,10 @@ void loop() {
   for (int i=0; i<sizeof(sw); i++) {                        // pour chaque boutons et LEDS
     int reading = digitalRead(sw[i]);                       // on lit l'état du bouton
     if (reading != lastButtonState[i]) {                    // si la lecture est différente de l'ancien état
-      Serial.println(reading);                              // on écrit la lecture dans la com série avec le pc pour infos
+      Serial.print("SW");                                   // on écrit la lecture dans la com série avec le pc pour infos
+      Serial.print(i+1);
+      Serial.print(" : ");
+      reading ? Serial.println("relaché") : Serial.println("enfoncé");                              
       lastDebounceTime = millis();                          // on active le temps du rebond 
     }
     if ((millis() - lastDebounceTime) > debounceDelay) {    // après le temps du rebond
