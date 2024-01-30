@@ -13,7 +13,7 @@
 
 On utilise la librairie **SoftwareSerial** pour ouvrir une 2ème com série. 
 
-**Pour la partie Récepteur** : le LoraE5 est connecté comme suit :
+**Pour la partie Récepteur** : le LoraE5 et l'écran OLED 128x64 I2C sont connecté comme suit :
 
 | STM32 | LoraE5 | 
 | :---: | :----: | 
@@ -24,7 +24,7 @@ On utilise la librairie **SoftwareSerial** pour ouvrir une 2ème com série.
 
 On utilise la librairie **SoftwareSerial** pour ouvrir une 2ème com série. 
 
-et l'écran OLED 128x64 I2C est branché comme suit :
+L'écran OLED 128x64 I2C est branché comme suit :
 
 | STM32 | OLED   | 
 | :---: | :----: | 
