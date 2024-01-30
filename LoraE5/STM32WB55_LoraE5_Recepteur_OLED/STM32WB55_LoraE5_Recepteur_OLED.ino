@@ -1,8 +1,8 @@
 /***** RECEPTEUR (STM32WB55 LORAE5 OLED128x64) *****/
                       /****** Ajout des librairies nécessaires ******/
 
-# include <Arduino.h>
-#include<SoftwareSerial.h>         // pour ouvrir une deuxième com série
+#include <Arduino.h>
+#include <SoftwareSerial.h>         // pour ouvrir une deuxième com série
 #include <Wire.h>                  // pour l'I2C
 #include <Adafruit_GFX.h>          // pour l'écran oled
 #include <Adafruit_SSD1306.h>      // pour l'écran oled
@@ -17,7 +17,7 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 
 // pour communiquer avec entre la WB55 et le LoraE5
-SoftwareSerial LoraE5(A0, A1);       // on ouvre une 2ème com série sur A0 A1 (on y branche le loraE RX TX)
+SoftwareSerial LoraE5(A0, A1);       // on ouvre une 2ème com série sur A0 A1 (on y branche le LoraE5 RX TX)
 String inputString, message = "";    // pour la réception global et pour l'extraction du message
 bool stringComplete = false;         // un flag pour savoir quand le message reçu est complet
 
@@ -53,7 +53,7 @@ int commande_AT_LoraE5(char *check_reponse, int timeout_ms, String at_commande) 
   delay(100);                                                     // on attend un petit peu
   temps = millis();                                               // on récupère le temps du compteur millis
   if (check_reponse == NULL) { return 0; }                        // si le paramètre check_reponse est null on retourne 0 
-  do {                                                            // on fait (tant qu'on est pas au timout ou qu'on ne retourne pas 1)
+  do {                                                            // on fait (tant qu'on est pas au timeout ou qu'on ne retourne pas 1)
       while (LoraE5.available() > 0) {                              // pour chaque byte qui arrive dans la com série avec le module LoraE5
           nouveau_byte = LoraE5.read();                               // on le récupère
           recv_buf[place++] = nouveau_byte;                           // on se décale dans le buffer et remplace le 0 par le nouveau byte 
@@ -61,8 +61,8 @@ int commande_AT_LoraE5(char *check_reponse, int timeout_ms, String at_commande) 
           delay(2);                                                   // on attend un petit peu
       }
       if (strstr(recv_buf, check_reponse) != NULL) { return 1; }    // si recv_buf reçu correspond à check_reponse on retourne 1
-  } while (millis() - temps < timeout_ms);                        // tant qu'on est pas au timout  
-  return 0;                                                       // si on est au timout on retourn 0
+  } while (millis() - temps < timeout_ms);                        // tant qu'on est pas au timeout  
+  return 0;                                                       // si on est au timeout on retourne 0
 }
 
 // fonction pour extraire les datas du message et agir en fonction
@@ -87,7 +87,7 @@ int attend_msg(void) {
     delay(2);                                                               // on attend un petit peu
   }
   if (place) {                                                             // si place > 0, c'est qu'un message est arrivé
-    String inputString = String(recv_buf);                                   // on recupère le buffer dans une string
+    String inputString = String(recv_buf);                                   // on récupère le buffer dans une string
     int first_place = inputString.indexOf('"');                              // on cherche la place du premier guillemet dans la string
     int second_place = inputString.lastIndexOf('"');                         // on cherche la place du dernier guillemet dans la string
     String msgHEX = inputString.substring(first_place + 1, second_place);    // on extrait ce qui est entre guillemet dans la string
@@ -107,7 +107,7 @@ String hexToString(String hex_text) {
     if (i % 2 != 0) {                                           // si la place de ce caractère dans le message est impaire :
       char temp[3];                                               // on créé un tableau vide de 3 (FF = 255)
       sprintf(temp, "%c%c", hex_text[i - 1], hex_text[i]);        // on y place le caractère précédent et ce caractère
-      int number = (int)strtol(temp, NULL, 16);                   // on converti cette partie héxadécimale en int
+      int number = (int)strtol(temp, NULL, 16);                   // on converti cette partie hexadécimale en int
       ascii_text += char(number);                                 // on ajoute dans notre string de réception le char correspondant
     }
   }
@@ -124,8 +124,8 @@ void setup(void) {
   clear_display();                
   Serial.begin(9600);                                                                             // on démarre la com série avec le pc
   LoraE5.begin(9600);                                                                             // on démarre la com série avec le module LoraE5
-  Serial.println("****  Recepteur STM32WB55 LoraE5 ****");                                        // on écrit dans la com série avec le pc pour infos   
-  Serial.println("Configuration du module LoraE5 en mode récéption");                             // on écrit dans la com série avec le pc pour infos        
+  Serial.println("****  Récepteur STM32WB55 LoraE5 ****");                                        // on écrit dans la com série avec le pc pour infos   
+  Serial.println("Configuration du module LoraE5 en mode réception");                             // on écrit dans la com série avec le pc pour infos        
   if (commande_AT_LoraE5("+AT: OK", 1500, "AT\r\n")) {                                            // si la fonction commande_AT_LoraE5 retourne 1 :
     is_exist = true;
     delay(500);                                                                                     // on attend un petit peu
@@ -133,7 +133,7 @@ void setup(void) {
     delay(500);                                                                                     // on attend un petit peu
     commande_AT_LoraE5("+TEST: RFCFG", 1500, "AT+TEST=RFCFG,866,SF12,125,12,15,14,ON,OFF,OFF\r\n"); // on configure la partie RF du module LoraE5
     delay(500);                                                                                     // on attend un petit peu      
-    commande_AT_LoraE5("+TEST: RXLRPKT", 1500, "AT+TEST=RXLRPKT\r\n");                              // on passe le module LoraE5 en mode récéption
+    commande_AT_LoraE5("+TEST: RXLRPKT", 1500, "AT+TEST=RXLRPKT\r\n");                              // on passe le module LoraE5 en mode réception
     delay(500);                                                                                     // on attend un petit peu 
     Serial.println();                                                                               // on espace d'une ligne       
     Serial.println("Module LoraE5 en mode récéption");                                              // on écrit dans la com série avec le pc pour infos 
@@ -147,7 +147,7 @@ void setup(void) {
 void loop(void) {
   if (is_exist)  {                                                      // si le module LoraE5 est présent et fonctionnel :
     if (attend_msg()) {                                                   // si la fonction attend_msg retourne 1
-      Serial.println("**** réception, convertion et traitement ok ****");   // on écrit dans la com série
+      Serial.println("**** réception, conversion et traitement ok ****");   // on écrit dans la com série
       Serial.println();                                                     // on espace d'une ligne 
     }
   }

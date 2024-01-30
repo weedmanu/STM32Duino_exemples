@@ -1,7 +1,7 @@
 /***** EMETTEUR (STM32WB55 LORAE5) *****/
                     /****** Ajout des librairies nécessaires ******/
 # include <Arduino.h>
-#include<SoftwareSerial.h>              // pour ouvrir une deuxième com série
+#include <SoftwareSerial.h>              // pour ouvrir une deuxième com série
 
                       /****** Déclaration des constantes, variables et objets ******/
 // les pins des boutons et des LEDS de la WB55
@@ -33,7 +33,7 @@ int commande_AT_LoraE5(char *check_reponse, int timeout_ms, String at_commande) 
   delay(100);                                                     // on attend un petit peu
   temps = millis();                                               // on récupère le temps du compteur millis
   if (check_reponse == NULL) { return 0; }                        // si le paramètre check_reponse est null on retourne 0 
-  do {                                                            // on fait (tant qu'on est pas au timout ou qu'on ne retourne pas 1)
+  do {                                                            // on fait (tant qu'on est pas au timeout ou qu'on ne retourne pas 1)
     while (LoraE5.available() > 0) {                              // pour chaque byte qui arrive dans la com série avec le module LoraE5
       nouveau_byte = LoraE5.read();                               // on le récupère
       recv_buf[place++] = nouveau_byte;                           // on se décale dans le buffer et remplace le 0 par le nouveau byte 
@@ -41,8 +41,8 @@ int commande_AT_LoraE5(char *check_reponse, int timeout_ms, String at_commande) 
       delay(2);                                                   // on attend un petit peu
     }
     if (strstr(recv_buf, check_reponse) != NULL) { return 1; }    // si recv_buf reçu correspond à check_reponse on retourne 1
-  } while (millis() - temps < timeout_ms);                        // tant qu'on est pas au timout  
-  return 0;                                                       // si on est au timout on retourn 0
+  } while (millis() - temps < timeout_ms);                        // tant qu'on est pas au timeout  
+  return 0;                                                       // si on est au timeout on retourne 0
 }
 
 // la fonction qui envoie un message
@@ -52,7 +52,7 @@ void envoie_msg(char* message) {
   char cmd[128];                                                                    // on déclare un buffer de type char de 128 places
   sprintf(cmd, "AT+TEST=TXLRSTR,\"%s\"\r\n", message);                              // on construit notre commande et la place dans le buffer
   result = commande_AT_LoraE5("+TEST: TX DONE", 2000, cmd);                         // on récupère le retour de la fonction commande_AT_LoraE5 d'envoie
-  result ? Serial.println("Envoie réussi") : Serial.println("Echec de l'envoie");   // si retounre 1 c'est ok sinon c'est ko
+  result ? Serial.println("Envoie réussi") : Serial.println("Échec de l'envoie");   // si retourne 1 c'est ok sinon c'est ko
   Serial.println();
 }
 
@@ -60,7 +60,7 @@ void envoie_msg(char* message) {
 void setup(void) {
   Serial.begin(9600);                                                                             // on démarre la com série avec le pc
   LoraE5.begin(9600);                                                                             // on démarre la com série avec le module LoraE5
-  Serial.println("****  Emetteur STM32WB55 LoraE5 ****");                                         // on écrit dans la com série avec le pc pour infos   
+  Serial.println("****  Émetteur STM32WB55 LoraE5 ****");                                         // on écrit dans la com série avec le pc pour infos   
   Serial.println("Configuration du module LoraE5 en mode émission");                              // on écrit dans la com série avec le pc pour infos        
   if (commande_AT_LoraE5("+AT: OK", 1500, "AT\r\n")) {                                            // si la fonction commande_AT_LoraE5 retourne 1 :
     is_exist = true;                                                                                // le module LoraE5 est présent et fonctionnel
@@ -75,9 +75,9 @@ void setup(void) {
     is_exist = false;                                                                               // le module LoraE5 est non présent ou défaillant 
     Serial.println("Aucun module LoraE5 de trouvé");                                                // on écrit dans la com série avec le pc pour infos
   }
-  for (int i=0; i < sizeof(sw); i++){         // pour chaque boutons et LEDS
+  for (int i=0; i < sizeof(sw); i++){         // pour chaque boutons et LED
     pinMode(sw[i], INPUT_PULLUP);             // on met les boutons en mode INPUT
-    pinMode(led[i], OUTPUT);                  // on met les LEDS en mode OUPUT
+    pinMode(led[i], OUTPUT);                  // on met les LED en mode OUPUT
   }
   Serial.println();                                                                               // on espace d'une ligne
 }
@@ -85,7 +85,7 @@ void setup(void) {
                     /****** loop ******/
 void loop(void) {
   if (is_exist)  {                   // si le module LoraE5 est présent et fonctionnel :
-    for (int i=0; i<sizeof(sw); i++) {                        // pour chaque boutons et LEDS
+    for (int i=0; i<sizeof(sw); i++) {                        // pour chaque boutons et LED
       int reading = digitalRead(sw[i]);                       // on lit l'état du bouton
       if (reading != lastButtonState[i]) {                    // si la lecture est différente de l'ancien état
         lastDebounceTime = millis();                          // on active le temps du rebond 
