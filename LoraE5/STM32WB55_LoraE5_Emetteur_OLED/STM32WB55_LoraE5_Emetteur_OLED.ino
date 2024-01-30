@@ -100,7 +100,7 @@ void loop(void) {
             digitalWrite(led[i], ledState[i]);                // on met la LED dans le nouvel état (allumé)
             if (i == 0) {envoie_msg("LOGO|0|");}                // si on à appuyer sur le SW1, on envoi le msg qui demande le logo 0
             if (i == 1) {envoie_msg("LOGO|1|");}                // si on à appuyer sur le SW2, on envoi le msg qui demande le logo 1
-            if (i == 2) {envoie_msg("LOGO|2|");}                // si on à appuyer sur le SW2, on envoi le msg qui demande le logo 2
+            if (i == 2) {envoie_msg("LOGO|2|");}                // si on à appuyer sur le SW3, on envoi le msg qui demande le logo 2
             ledState[i] = !ledState[i];                       // on remet l'état de la LED dans sont état initial
           }
         }
